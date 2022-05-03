@@ -1,0 +1,59 @@
+2 estados 2-10-4= 16
+4 estados 3-14-10= 27
+16 estados 2-32-28=62
+27 estados 2-49-40=91
+
+
+======================================================================================
+package com.infnet.etapa6;
+
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+public class ProjetoDeBlocoTP {
+
+	public static void main(String[] args) {
+		
+		long startTime = System.currentTimeMillis(); 
+
+		Logger.getLogger("org.apache").setLevel(Level.WARN);
+
+		SparkSession spark = SparkSession
+				.builder()
+				.master("local[*]")
+				.appName("Meu App Pessoas")
+				.getOrCreate();
+		
+		timeLapse(startTime, "Criar Spark Session");
+
+		startTime = System.currentTimeMillis();
+		Dataset<Row> df = spark
+				.read()
+				.format("com.databricks.spark.csv")
+				.option("inferschema", true)
+				.option("header", true)
+				.load("hdfs://localhost:9000/user/renoaldo/database/COVID19/caso_full.csv");
+		timeLapse(startTime, "Leitura do Hdfs");
+		
+		//df.printSchema();
+		
+		 
+		startTime = System.currentTimeMillis();
+		df.createOrReplaceTempView("covidReport");
+		Dataset<Row> sqlDF = spark.sql("select date,place_type,city,state,last_available_deaths from covidReport "
+									 + "order by last_available_deaths desc");
+		sqlDF.show(10);
+		
+		timeLapse(startTime, "Criar Temp View, Retornar filtro e Imprimir 10");
+
+		spark.stop();
+	}
+	
+	private static void timeLapse(long startTime , String operation) {
+		System.out.println("Operação "+ operation+ " realizada em "+(System.currentTimeMillis() - startTime)/1000 + " segundos");
+	}
+}
+

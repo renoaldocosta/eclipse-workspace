@@ -1,0 +1,42 @@
+===== The Columns =====
+Índice 0 - city - 
+Índice 1 - city_ibge_code
+Índice 2 - date
+Índice 3 - epidemiological_week
+Índice 4 - estimated_population
+Índice 5 - estimated_population_2019
+Índice 6 - is_last
+Índice 7 - is_repeated
+Índice 8 - last_available_confirmed
+Índice 9 - last_available_confirmed_per_100k_inhabitants
+Índice 10 - last_available_date
+Índice 11 - last_available_death_rate
+Índice 12 - last_available_deaths
+Índice 13 - order_for_place
+Índice 14 - place_type
+Índice 15 - state
+Índice 16 - new_confirmed
+Índice 17 - new_deaths
+
+- 
+
+=======================
+Coluna 	Tipo 	Título 	Descrição
+epidemiological_week 	integer 	Semana epidemiológica 	Número da semana epidemiológica.
+date 	string (max_length=10) 	Data 	Data de coleta dos dados no formato YYYY-MM-DD.
+order_for_place 	integer 	Dias a partir do 1o caso 	Número que identifica a ordem do registro para este local. O registro referente ao primeiro boletim em que esse local aparecer será contabilizado como 1 e os demais boletins incrementarão esse valor.
+state 	string (max_length=2) 	UF 	Sigla da unidade federativa, exemplo: SP.
+city 	string (max_length=64) 	Município 	Nome do município (pode estar em branco quando o registro é referente ao estado, pode ser preenchido com `Importados/Indefinidos` também).
+city_ibge_code 	integer 	Cód. IBGE 	Código IBGE do local.
+place_type 	string (max_length=5) 	Tipo de local 	Tipo de local que esse registro descreve, pode ser city ou state.
+last_available_date 	string (max_length=10) 	Data da informação 	Data da qual o dado se refere.
+last_available_confirmed 	integer 	Confirmados acum. 	Número de casos confirmados do último dia disponível igual ou anterior à data date.
+last_available_confirmed_per_100k_inhabitants 	float 	Confirmados acum./100k hab. 	Número de casos confirmados por 100.000 habitantes do último dia disponível igual ou anterior à data date.
+new_confirmed 	integer 	Confirmações no dia 	Número de novos casos confirmados desde o último dia (note que caso is_repeated seja True, esse valor sempre será 0 e que esse valor pode ser negativo caso a SES remaneje os casos desse município para outro).
+last_available_deaths 	integer 	Óbitos acum. 	Número de mortes do último dia disponível igual ou anterior à data date.
+new_deaths 	integer 	Óbitos no dia 	Número de novos óbitos desde o último dia (note que caso is_repeated seja True, esse valor sempre será 0 e que esse valor pode ser negativo caso a SES remaneje os casos desse município para outro).
+last_available_death_rate 	float 	Óbitos/confirmados 	Taxa de mortalidade (mortes / confirmados) do último dia disponível igual ou anterior à data date.
+estimated_population 	integer 	População estimada 2019 	População estimada para o local em 2020, segundo o IBGE.
+estimated_population_2019 	integer 	População estimada 2019 	População estimada para esse município/estado em 2019, segundo o IBGE.
+is_last 	bool 	É a última atualização? 	Campo pré-computado que diz se esse registro é o mais novo para esse local, pode ser True ou False (caso filtre por esse campo, use is_last=True ou is_last=False, não use o valor em minúsculas).
+is_repeated 	bool 	Dado repetido? 	Campo pré-computado que diz se as informações nesse registro foram publicadas pela Secretaria Estadual de Saúde no dia date ou se o dado é repetido do último dia em que o dado está disponível (igual ou anterior a date). Isso ocorre pois nem todas as secretarias publicam boletins todos os dias. Veja também o campo last_available_date. 
