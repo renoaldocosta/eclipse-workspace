@@ -11,6 +11,8 @@ public class ProjetoDeBlocoTP {
 		
 		//Configura o nível de log para o nível de aviso. 
 		Logger.getLogger("org.apache").setLevel(Level.WARN);
+		
+		//==================== Questão 1 ====================
 		SparkSession spark = SparkSession
 				.builder()
 				.master("local[*]")
