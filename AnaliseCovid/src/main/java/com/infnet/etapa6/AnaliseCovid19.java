@@ -49,27 +49,7 @@ public class AnaliseCovid19 {
 				//.load("hdfs://localhost:9000/user/renoaldo/database/COVID19/caso_full.csv");
 		
 		
-		//Pesquisando valores genéricos em todas as colunas e trazendo quantidade.
-//		startTime = System.currentTimeMillis();
-//		System.out.println("========================== Análise de Valores Null =====================");
-//		System.out.println(""); 		
-//		Dataset<Row> dfRow;
-////		for (String c : df.columns()) {
-////			System.out.println("============ Coluna "+c.toUpperCase()+" ============");
-////			
-////			dfRow = df
-////			.withColumn(col(c)+"_is_Null",col(c).isNull());
-////			
-////			dfRow
-////			.filter(col(col(c)+"_is_Null").equalTo(true))
-////			.show(5);
-////			
-////			dfRow
-////			.groupBy(col(col(c)+"_is_Null"))
-////			.count()
-////			.show();
-////		}
-//		timeExecution(startTime);
+		//searchGenericallyNullValuesThroughtColumns(df);
 		
 		
 //		System.out.println("========================== Pesquisando Cidades =====================");
@@ -265,11 +245,43 @@ public class AnaliseCovid19 {
 		
 		
 		spark.stop();
+				
+	}
+	
+	private static void searchGenericallyNullValuesThroughtColumns(Dataset<Row> df) {
+		//Pesquisando valores genéricos em todas as colunas e trazendo quantidade.
+		long startTime;
+		long startTimeInitial = System.currentTimeMillis();
+		System.out.println("========================== Análise de Valores Null =====================");
+		System.out.println(""); 		
+		Dataset<Row> dfRow;
+		for (String c : df.columns()) {
+			startTime = System.currentTimeMillis();
+			System.out.println("============ Coluna "+c.toUpperCase()+" ============");
+			
+			dfRow = df
+			.withColumn(col(c)+"_is_Null",col(c).isNull());
+			
+			dfRow
+			.filter(col(col(c)+"_is_Null").equalTo(true))
+			.show(5);
+			
+			dfRow
+			.groupBy(col(col(c)+"_is_Null"))
+			.count()
+			.show();
+			
+			timeExecution(startTime);
+		}
+		timeExecutionFull(startTimeInitial);
+	}
+	
+	private static void timeExecutionFull(long startTimeInitial) {
 		System.out.println("Tempo de execução total: "+((System.currentTimeMillis()-startTimeInitial)/1000)+" segundos");
-		
 	}
 	
 	private static void timeExecution(long startTime) {
 		System.out.println("Tempo de Execução: " + (System.currentTimeMillis() - startTime) / 1000 + " segundos.");
 	}
+	
 }
